@@ -1,0 +1,15 @@
+{
+  "common": {
+    "title": "Redemption",
+    "tip1": "Redemption Form"
+  },
+  "form1": {
+    "name": "Name (As per IC)",
+    "icNumber": "IC Number",
+    "phone": "Phone Number",
+    "address": "Address",
+    "postCode": "Postcode",
+    "email": "Email",
+    "btConfirm": "Confirm"
+  }
+}
