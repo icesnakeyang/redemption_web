@@ -10,6 +10,7 @@
     "address": "Address",
     "postCode": "Postcode",
     "email": "Email",
-    "btConfirm": "Confirm"
+    "btConfirm": "Confirm",
+    "tipSaveSuccess": "Save successful!"
   }
 }

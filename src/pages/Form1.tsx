@@ -1,8 +1,11 @@
-import {Button, Card, Checkbox, Col, Form, Input, Row, Select} from "antd";
+import {Button, Card, Checkbox, Col, Form, Input, message, Row, Select} from "antd";
 import {useTranslation} from "react-i18next";
-import {useState} from "react";
+import React, {useEffect, useState} from "react";
+import {apiSaveUser, apiGetPhoneVerifyCode, apiVerifySMSCode, apiTest1} from '../api/Api'
+import Icon, {CheckCircleFilled} from '@ant-design/icons';
 
 const {Option} = Select;
+let timer: any = null;
 
 const Form1 = () => {
     const {t} = useTranslation();
@@ -14,7 +17,44 @@ const Form1 = () => {
     const [address, setAdress] = useState('')
     const [postcode, setPostcode] = useState('')
     const [email, setEmail] = useState('')
-    const [name, setName] = useState('')
+    const [userName, setUserName] = useState('')
+    const [smsCode, setSMSCode] = useState('')
+    const [smsBox, setSMSBox] = useState(false)
+    const [smsSending1, setSMSSending1] = useState(false)
+    const [smsSending2, setSMSSending2] = useState(false)
+    const [smsTime, setSMSTime] = useState(10)
+    const [smsStatus, setSmsStatus] = useState(false)
+    const [errName, setErrName] = useState(false)
+    const [errIc, setErrIc] = useState(false)
+    const [errPhone, setErrPhone] = useState(false)
+    const [errAddress, setErrAddress] = useState(false)
+    const [errPostcode, setErrPostcode] = useState(false)
+    const [errEmail, setErrEmail] = useState(false)
+    const [sendSMSStatus, setSendSMSStatus] = useState('CAN_SEND')
+    const [verifyStatus, setVerifyStatus] = useState('HIDE')
+
+    useEffect(() => {
+        timer && clearInterval(timer)
+        return () => {
+            timer && clearInterval(timer)
+        };
+    }, []);
+
+    useEffect(() => {
+        if (sendSMSStatus === 'SUCCESS') {
+            return
+        }
+        if (smsTime === 10) {
+            timer = setInterval(() =>
+                setSMSTime(item => --item), 1000)
+        } else {
+            if (smsTime === 0) {
+                clearInterval(timer)
+                setSendSMSStatus('CAN_SEND')
+                setSMSSending2(false)
+            }
+        }
+    }, [smsTime])
 
     const onIcN1 = (e: any) => {
         const {value: inputValue} = e.target;
@@ -48,9 +88,52 @@ const Form1 = () => {
         }
     }
 
+    const onSendSms = () => {
+        let params = {
+            phone: phoneF2
+        }
+        setSendSMSStatus('SENDING')
+        setTimeout(() => {
+            setSendSMSStatus('COUNTING')
+            setVerifyStatus('CAN_VERIFY')
+        }, 1000)
+        apiGetPhoneVerifyCode(params).then((res: any) => {
+            if (res.code === 0) {
+                message.success('send verify code success')
+            } else {
+                message.error(t('syserr.' + res.code))
+
+            }
+        }).catch(() => {
+            message.error(t('syserr.10001'))
+
+        })
+    }
+
+    const onVerifySMSCode = () => {
+        let params = {
+            phone: phoneF2,
+            code: smsCode
+        }
+        setTimeout(() => {
+            setSendSMSStatus('SUCCESS')
+            setVerifyStatus('HIDE')
+        }, 1000)
+        // apiVerifySMSCode(params).then((res: any) => {
+        //     if (res.code === 0) {
+        //         message.success('verify success')
+        //         setSmsStatus(true)
+        //     } else {
+        //         message.error(t('syserr.' + res.code))
+        //     }
+        // }).catch(() => {
+        //     message.error(t('syserr.10001'))
+        // })
+    }
+
     const onConfirm = () => {
         let params = {
-            name,
+            userName,
             icNumber1,
             icNumber2,
             icNumber3,
@@ -61,6 +144,21 @@ const Form1 = () => {
             email
         }
         console.log(params)
+        apiSaveUser(params).then((res: any) => {
+            if (res.code === 0) {
+                message.success(t('form1.tipSaveSuccess'));
+            } else {
+                message.error(t('syserr.' + res.code))
+            }
+        }).catch(() => {
+            message.error(t('syserr.10001'))
+        })
+    }
+
+    const onTest = () => {
+        apiTest1().then((res: any) => {
+            console.log(res)
+        })
     }
 
     return (<div style={{background: '#f5f4f8', padding: 20}}>
@@ -71,9 +169,10 @@ const Form1 = () => {
                     <Form.Item>
                         <div>{t('form1.name')}</div>
                         <Input style={{borderWidth: 0, borderBottomWidth: 1}}
-                               onChange={e => setName(e.target.value)}
+                               onChange={e => setUserName(e.target.value)}
                         />
                     </Form.Item>
+
                     <Form.Item>
                         <Row>
                             {/*IC Number*/}
@@ -146,12 +245,12 @@ const Form1 = () => {
                                             <Option value="011">011</Option>
                                             <Option value="012">012</Option>
                                             <Option value="013">013</Option>
-                                            <Option value="013">014</Option>
-                                            <Option value="013">015</Option>
-                                            <Option value="013">016</Option>
-                                            <Option value="013">017</Option>
-                                            <Option value="013">018</Option>
-                                            <Option value="013">019</Option>
+                                            <Option value="014">014</Option>
+                                            <Option value="015">015</Option>
+                                            <Option value="016">016</Option>
+                                            <Option value="017">017</Option>
+                                            <Option value="018">018</Option>
+                                            <Option value="019">019</Option>
                                         </Select>
                                     </Col>
                                     <Col style={{marginLeft: 5}}>
@@ -161,6 +260,38 @@ const Form1 = () => {
                                                maxLength={4}
                                                value={phoneF2}/>
                                     </Col>
+                                    <Col>
+                                        {sendSMSStatus === 'SUCCESS' ?
+                                            <CheckCircleFilled
+                                                style={{color: 'green', fontSize: '20px', marginLeft: 10}}/> :
+                                            sendSMSStatus === 'CAN_SEND' ?
+                                                <Button type="primary" style={{background: "#0553d3"}}
+                                                        onClick={() => {
+                                                            onSendSms()
+                                                        }}>Send code</Button> :
+                                                sendSMSStatus === 'SENDING' ?
+                                                    <Button disabled>Sending...</Button> :
+                                                    sendSMSStatus === 'COUNTING' ?
+                                                        <Button disabled>{smsTime}...</Button> :
+                                                        null
+                                        }
+                                    </Col>
+                                    {
+                                        verifyStatus === 'HIDE' ?
+                                            null :
+                                            verifyStatus === 'CAN_VERIFY' ?
+                                                <Col>
+                                                    <div style={{marginLeft: 10, display: 'flex', marginTop: 10}}>
+                                                        <Input placeholder="Input verify code"
+                                                               onChange={(e) => setSMSCode(e.target.value)}/>
+                                                        <Button type="primary"
+                                                                style={{background: "#0553d3"}} onClick={() => {
+                                                            onVerifySMSCode()
+                                                        }
+                                                        }>Verify</Button>
+                                                    </div>
+                                                </Col> : null
+                                    }
                                 </Row>
                             </Col>
                         </Row>
@@ -188,7 +319,8 @@ const Form1 = () => {
                                 <div>{t('form1.postCode')}</div>
                             </Col>
                             <Col xs={24} sm={19} md={20} lg={20} xl={21} xxl={22}>
-                                <Input style={{width: 100, borderWidth: 0, borderBottomWidth: 1}} placeholder="xxxxxx"
+                                <Input style={{width: 100, borderWidth: 0, borderBottomWidth: 1}}
+                                       placeholder="xxxxxx"
                                        onChange={(e) => onPostcode(e)}
                                        maxLength={6}
                                        value={postcode}/>
@@ -229,6 +361,10 @@ const Form1 = () => {
                                 onConfirm()
                             }}
                             type="primary">{t('form1.btConfirm')}</Button></div>
+            </Card>
+
+            <Card>
+                <Button type='primary' onClick={onTest}>test</Button>
             </Card>
         </div>
     )
