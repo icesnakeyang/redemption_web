@@ -257,7 +257,7 @@ const Form1 = () => {
                                         <Input style={{width: 105, borderWidth: 0, borderBottomWidth: 1}}
                                                onChange={(e) => setPhoneF2(e.target.value)}
                                                placeholder="xxxxxxxx"
-                                               maxLength={4}
+                                               maxLength={8}
                                                value={phoneF2}/>
                                     </Col>
                                     <Col>

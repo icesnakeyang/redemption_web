@@ -1,7 +1,7 @@
 import {Get, Post} from "./ApiBase";
 
-const host = "http://localhost:8004/redemption_api";
-// const host = "http://181.215.246.126:8004/redemption_api";
+// const host = "http://localhost:8004/redemption_api";
+const host = "http://181.215.246.126:8004/redemption_api";
 
 export const apiSaveUser = (params: any) => {
     return Post(`${host}/form1/saveForm1`, params);
