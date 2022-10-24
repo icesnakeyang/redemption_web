@@ -11,6 +11,15 @@
     "postCode": "Postcode",
     "email": "Email",
     "btConfirm": "Confirm",
-    "tipSaveSuccess": "Save successful!"
+    "tipSaveSuccess": "Save successful!",
+    "tipErrNoUsername": "Please input your name",
+    "tipErrPhoneVerify": "You must verify your phone number first",
+    "tipErrNoIcNumber": "Please input your IC number"
+  },
+  "syserr": {
+    "10001": "System or network error",
+    "10071": "The sms code has expired",
+    "10072": "Verify code error",
+    "10074": "No such verify information"
   }
 }
