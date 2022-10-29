@@ -91,7 +91,14 @@ const Form1 = () => {
     }
 
     const onPhone2 = (e: any) => {
+        console.log(phoneF1)
         const code = e.target.value
+        if (phoneF1 === '011') {
+        } else {
+            if (code.length > 7) {
+                return
+            }
+        }
         const reg = /^([0]|[1-9][0-9]*)$/
         if (reg.test(code) || code === '') {
             setPhoneF2(code)
@@ -301,6 +308,7 @@ const Form1 = () => {
                                 style={{width: 90, background: '#fafafa'}}
                                 onChange={(e) => {
                                     console.log(e)
+                                    setPhoneF2('')
                                     setPhoneF1(e)
                                 }}>
                                 <Option value="010">010</Option>
@@ -314,7 +322,7 @@ const Form1 = () => {
                                 <Option value="018">018</Option>
                                 <Option value="019">019</Option>
                             </Select>
-                            <Input style={{marginLeft: 5, width: 80, borderWidth: 0, borderBottomWidth: 1}}
+                            <Input style={{marginLeft: 5, width: 100, borderWidth: 0, borderBottomWidth: 1}}
                                    onChange={(e) => onPhone2(e)}
                                    placeholder="xxxxxxxx"
                                    maxLength={8}
