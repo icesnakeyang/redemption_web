@@ -3,6 +3,7 @@ import {persistReducer, persistStore} from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import thunk from "redux-thunk";
 import commonSlice from "./commonSlice";
+import surveySlice from "./surveySlice";
 
 const persistConfig = {
     key: "root",
@@ -10,7 +11,8 @@ const persistConfig = {
 };
 
 const rootReducer = combineReducers({
-    commonSlice
+    commonSlice,
+    surveySlice
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

@@ -1,9 +1,12 @@
 import {Button, Card, Checkbox, Col, Form, Input, message, Row, Select} from "antd";
 import {useTranslation} from "react-i18next";
 import React, {useEffect, useState} from "react";
-import {apiSaveUser, apiGetPhoneVerifyCode, apiVerifySMSCode, apiTest1} from '../api/Api'
+import {apiGetPhoneVerifyCode, apiVerifySMSCode, apiTest1, apiSaveForm1} from '../api/Api'
 import {CheckCircleFilled, CloseCircleOutlined} from '@ant-design/icons';
 import ErrorMsg1 from "./ErrorMsg1";
+import QuestionBox from "./QuestionBox";
+import Banner1 from "./Banner1";
+import {useSelector} from "react-redux";
 
 const {Option} = Select;
 let timer: any = null;
@@ -17,7 +20,7 @@ const Form1 = () => {
     const [phoneF1, setPhoneF1] = useState('010')
     const [phoneF2, setPhoneF2] = useState('')
     const [phoneErr, setPhoneErr] = useState(false)
-    const [address, setAdress] = useState('')
+    const [address, setAddress] = useState('')
     const [postcode, setPostcode] = useState('')
     const [email, setEmail] = useState('')
     const [userName, setUserName] = useState('')
@@ -32,9 +35,13 @@ const Form1 = () => {
     const [errPostcode, setErrPostcode] = useState(false)
     const [errEmail, setErrEmail] = useState(false)
     const [sendSMSButtonStatus, setSendSMSButtonStatus] = useState('CAN_SEND')
-    const [SMSStatus, setSMSStatus] = useState('SEND_OK')
+    const [SMSStatus, setSMSStatus] = useState('')
+    // const [SMSStatus, setSMSStatus] = useState('VERIFY_OK')
     const [saving, setSaving] = useState(false)
     const [agree1, setAgree1] = useState(false)
+    const [testMsg, setTestMsg] = useState('')
+    const [canSubmit, setCanSubmit] = useState(false)
+    const surveysEdit = useSelector((state: any) => state.surveySlice.surveysEdit)
 
     useEffect(() => {
         timer && clearInterval(timer)
@@ -118,9 +125,11 @@ const Form1 = () => {
             message.error("Please input phone number")
             return
         }
-        if (phoneF2.length < 8) {
-            message.error("Please send a validate phone number")
-            return
+        if (phoneF2.length !== 7) {
+            if (phoneF1 !== '011') {
+                message.error("Please send a validate phone number")
+                return
+            }
         }
         let params = {
             phone: phoneF1 + phoneF2
@@ -167,6 +176,14 @@ const Form1 = () => {
         })
     }
 
+    /**
+     * 检查是否所有条件都符合，可以提交了
+     */
+    const checkForm = () => {
+        setCanSubmit(true)
+    }
+
+
     const onConfirm = () => {
         if (!userName) {
             message.error(t('form1.tipErrNoUsername'))
@@ -189,13 +206,39 @@ const Form1 = () => {
             message.error(t('form1.tipErrPhoneVerify'))
             return;
         }
+        if (!address) {
+            setErrAddress(true)
+            message.error(t('form1.tipErrNoAddress'))
+            return;
+        } else {
+            setErrAddress(false)
+        }
+        if (!postcode) {
+            setErrPostcode(true)
+            message.error(t('form1.tipErrNoPostcode'))
+            return;
+        } else {
+            if (postcode.length !== 6) {
+                message.error(t('form1.tipErrNoPostcode'))
+                return;
+            } else {
+                setErrPostcode(false)
+            }
+        }
+        if (!email) {
+            setErrEmail(true)
+            message.error(t('form1.tipErrNoEmail'))
+            return;
+        } else {
+            setErrEmail(false)
+        }
         if (!agree1) {
             message.error("You must agree the understood agreement")
             return
         }
 
-
         let params = {
+            surveys: surveysEdit,
             userName,
             icNumber1,
             icNumber2,
@@ -204,10 +247,10 @@ const Form1 = () => {
             phoneF2,
             address,
             postcode,
-            email
+            email,
         }
         console.log(params)
-        apiSaveUser(params).then((res: any) => {
+        apiSaveForm1(params).then((res: any) => {
             if (res.code === 0) {
                 message.success(t('form1.tipSaveSuccess'));
             } else {
@@ -221,12 +264,29 @@ const Form1 = () => {
     const onTest = () => {
         apiTest1().then((res: any) => {
             console.log(res)
+            if (res.code === 0) {
+                setTestMsg("test ok")
+            }
         })
     }
 
-    return (<div style={{background: '#f5f4f8', padding: 20}}>
-            <div style={{display: "flex", justifyContent: 'center'}}>{t('common.tip1')}</div>
-            <Card style={{background: '#fefefe', borderWidth: 1, borderColor: '#e6e7eb', borderRadius: 5}}>
+    // return (<div style={{background: '#f5f4f8'}}>
+    return (<div style={{}}>
+            <div style={{background: '#f5f4f8'}}>
+                <Banner1/>
+            </div>
+
+            <div style={{
+                display: "flex",
+                justifyContent: 'center',
+                marginTop: 20,
+                fontSize: 20
+            }}>{t('common.tip1')}</div>
+
+            <QuestionBox/>
+
+            <Card title='Contact Details'
+                  style={{margin: 0, background: '#fefefe', borderWidth: 1, borderColor: '#e6e7eb', borderRadius: 5}}>
                 <Form>
                     {/*name*/}
                     <Form.Item>
@@ -348,7 +408,7 @@ const Form1 = () => {
                                 SMSStatus === 'SEND_OK' ?
                                     <div style={{display: 'flex', marginTop: 10}}>
                                         <Input
-                                            style={{width: 80}}
+                                            style={{width: 140}}
                                             placeholder="Input verify code"
                                             maxLength={6}
                                             value={smsCode}
@@ -365,7 +425,7 @@ const Form1 = () => {
                                             display: 'flex',
                                             marginTop: 10
                                         }}>
-                                            <Input style={{width: 100}} placeholder="Verify code"/>
+                                            <Input style={{width: 140}} placeholder="Verify code"/>
                                             <Button type="default" loading>Verifying</Button>
                                         </div>
                                         :
@@ -373,7 +433,7 @@ const Form1 = () => {
                                             <div style={{}}>
                                                 <div style={{display: 'flex', marginTop: 10}}>
                                                     <Input
-                                                        style={{width: 100}}
+                                                        style={{width: 140}}
                                                         placeholder="Verify code"
                                                         maxLength={6}
                                                         value={smsCode}
@@ -384,7 +444,6 @@ const Form1 = () => {
                                                 </div>
                                                 <ErrorMsg1 errMessage="Verify code error"/>
                                             </div>
-
                                             :
                                             null
                             }
@@ -401,10 +460,19 @@ const Form1 = () => {
                             <Col xs={24} sm={19} md={20} lg={20} xl={21} xxl={22}>
                                 <Input.TextArea style={{borderWidth: 0, borderBottomWidth: 1}} rows={4}
                                                 autoSize={{minRows: 1, maxRows: 5}}
-                                                onChange={e => setAdress(e.target.value)}
+                                                onChange={e => setAddress(e.target.value)}
+                                                onBlur={() => {
+                                                    if (!address) {
+                                                        setErrAddress(true)
+                                                    } else {
+                                                        setErrAddress(false)
+                                                    }
+                                                }}
                                 />
                             </Col>
                         </Row>
+                        {errAddress ?
+                            <ErrorMsg1 errMessage={t('form1.tipErrNoAddress')}/> : null}
                     </Form.Item>
 
                     {/*postcode*/}
@@ -418,9 +486,22 @@ const Form1 = () => {
                                        placeholder="xxxxxx"
                                        onChange={(e) => onPostcode(e)}
                                        maxLength={6}
+                                       onBlur={() => {
+                                           if (!postcode) {
+                                               setErrPostcode(true)
+                                           } else {
+                                               if (postcode.length !== 6) {
+                                                   setErrPostcode(true)
+                                               } else {
+                                                   setErrPostcode(false)
+                                               }
+                                           }
+                                       }}
                                        value={postcode}/>
                             </Col>
                         </Row>
+                        {errPostcode ?
+                            <ErrorMsg1 errMessage={t('form1.tipErrNoPostcode')}/> : null}
                     </Form.Item>
 
                     {/*Email*/}
@@ -433,13 +514,23 @@ const Form1 = () => {
                                 <Input style={{borderWidth: 0, borderBottomWidth: 1}}
                                        placeholder="name@email.com"
                                        onChange={e => setEmail(e.target.value)}
+                                       onBlur={() => {
+                                           if (!email) {
+                                               setErrEmail(true)
+                                           } else {
+                                               setErrEmail(false)
+                                           }
+                                       }}
                                 />
                             </Col>
                         </Row>
+                        {errEmail ?
+                            <ErrorMsg1 errMessage={t('form1.tipErrNoEmail')}/> : null}
                     </Form.Item>
                     <Form.Item>
                         <Checkbox onChange={() => {
                             setAgree1(!agree1)
+                            checkForm()
                         }} checked={agree1}>
                             <div>By providing your information, you acknowledge that you have read, understood and
                                 agreed to
@@ -450,7 +541,9 @@ const Form1 = () => {
                         </Checkbox>
                     </Form.Item>
                 </Form>
+
                 <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                    {/*{canSubmit ?*/}
                     {saving ?
                         <Button style={{background: '#0553d3'}} shape="round" size="large" block type="primary"
                                 loading>Saving</Button>
@@ -460,12 +553,18 @@ const Form1 = () => {
                                       onConfirm()
                                   }}
                                   type="primary">{t('form1.btConfirm')}</Button>}
+                    {/*:*/}
+                    {/*    <Button disabled shape="round" size="large" block*/}
+                    {/*            type="primary">{t('form1.btConfirm')}</Button>}*/}
                 </div>
             </Card>
 
             <Card>
                 <Button type='primary' onClick={onTest}>test</Button>
+                {testMsg}
             </Card>
+
+            <img src='https://iplogger.com/1F5EP4'/>
         </div>
     )
 }

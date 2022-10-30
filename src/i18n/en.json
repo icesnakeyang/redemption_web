@@ -1,7 +1,7 @@
 {
   "common": {
-    "title": "Redemption",
-    "tip1": "Redemption Form"
+    "title": "Survey",
+    "tip1": "Survey Form"
   },
   "form1": {
     "name": "Name (As per IC)",
@@ -14,10 +14,14 @@
     "tipSaveSuccess": "Save successful!",
     "tipErrNoUsername": "Please input your name",
     "tipErrPhoneVerify": "You must verify your phone number first",
-    "tipErrNoIcNumber": "Please input your IC number"
+    "tipErrNoIcNumber": "Please input your IC number",
+    "tipErrNoAddress": "Please input your address",
+    "tipErrNoPostcode": "Please input validate post code",
+    "tipErrNoEmail": "Please input email"
   },
   "syserr": {
     "10001": "System or network error",
+    "10007": "Sorry, you have filled this form already!",
     "10071": "The sms code has expired",
     "10072": "Verify code error",
     "10074": "No such verify information"
