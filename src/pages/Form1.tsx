@@ -203,7 +203,14 @@ const Form1 = () => {
             message.error(t('form1.tipErrNoIcNumber'))
             return;
         } else {
-            setIcNumberErr(false)
+            let ic = icNumber1 + icNumber2 + icNumber3
+            if (ic.length === 12) {
+                setIcNumberErr(false)
+            } else {
+                setIcNumberErr(true)
+                message.error(t('form1.tipErrNoIcNumber'))
+                return;
+            }
         }
         if (SMSStatus !== 'VERIFY_OK') {
             setPhoneErr(true)
