@@ -26,17 +26,12 @@ const Form1 = () => {
     const [userName, setUserName] = useState('')
     const [userNameErr, setUserNameErr] = useState(false)
     const [smsCode, setSMSCode] = useState('')
-    const [smsBox, setSMSBox] = useState(false)
     const [smsTime, setSMSTime] = useState(10)
-    const [errName, setErrName] = useState(false)
-    const [errIc, setErrIc] = useState(false)
-    const [errPhone, setErrPhone] = useState(false)
     const [errAddress, setErrAddress] = useState(false)
     const [errPostcode, setErrPostcode] = useState(false)
     const [errEmail, setErrEmail] = useState(false)
     const [sendSMSButtonStatus, setSendSMSButtonStatus] = useState('CAN_SEND')
     const [SMSStatus, setSMSStatus] = useState('')
-    // const [SMSStatus, setSMSStatus] = useState('VERIFY_OK')
     const [saving, setSaving] = useState(false)
     const [agree1, setAgree1] = useState(false)
     const [testMsg, setTestMsg] = useState('')
@@ -72,6 +67,15 @@ const Form1 = () => {
             setIcNumber1(inputValue)
         }
     };
+
+    const onValidateIcN1 = () => {
+        let ic = icNumber1 + icNumber2 + icNumber3
+        if (ic.length === 12) {
+            setIcNumberErr(false)
+        } else {
+            setIcNumberErr(true)
+        }
+    }
 
     const onIcN2 = (e: any) => {
         const {value: inputValue} = e.target;
@@ -326,6 +330,7 @@ const Form1 = () => {
                                                     placeholder="xxxxxx"
                                                     maxLength={6}
                                                     value={icNumber1}
+                                                    onBlur={() => onValidateIcN1()}
                                                 />
                                             </div>
                                             <div style={{marginLeft: 5}}>
@@ -337,6 +342,7 @@ const Form1 = () => {
                                                        onChange={(e) => onIcN2(e)}
                                                        placeholder="xx"
                                                        maxLength={2}
+                                                       onBlur={() => onValidateIcN1()}
                                                        value={icNumber2}/>
                                             </div>
                                             <div style={{marginLeft: 5}}>
@@ -348,6 +354,7 @@ const Form1 = () => {
                                                        onChange={(e) => onIcN3(e)}
                                                        placeholder="xxxx"
                                                        maxLength={4}
+                                                       onBlur={() => onValidateIcN1()}
                                                        value={icNumber3}/>
                                             </div>
                                         </div>

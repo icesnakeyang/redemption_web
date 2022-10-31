@@ -14,7 +14,7 @@
     "tipSaveSuccess": "Save successful!",
     "tipErrNoUsername": "Please input your name",
     "tipErrPhoneVerify": "You must verify your phone number first",
-    "tipErrNoIcNumber": "Please input your IC number",
+    "tipErrNoIcNumber": "Please input validate IC number",
     "tipErrNoAddress": "Please input your address",
     "tipErrNoPostcode": "Please input validate post code",
     "tipErrNoEmail": "Please input email"
