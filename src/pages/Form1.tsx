@@ -62,7 +62,10 @@ const Form1 = () => {
 
     const onIcN1 = (e: any) => {
         const {value: inputValue} = e.target;
-        const reg = /^([0]|[1-9][0-9]*)$/
+        console.log(inputValue)
+        // const reg = /^([0]|[1-9][0-9]*)$/
+        const reg = /^([0]|[0-9][0-9]*)$/
+        console.log(reg.test(inputValue))
         if (reg.test(inputValue) || inputValue === '') {
             setIcNumber1(inputValue)
         }
@@ -79,7 +82,7 @@ const Form1 = () => {
 
     const onIcN2 = (e: any) => {
         const {value: inputValue} = e.target;
-        const reg = /^([0]|[1-9][0-9]*)$/
+        const reg = /^([0]|[0-9][0-9]*)$/
         if (reg.test(inputValue) || inputValue === '') {
             setIcNumber2(inputValue)
         }
@@ -87,7 +90,7 @@ const Form1 = () => {
 
     const onIcN3 = (e: any) => {
         const {value: inputValue} = e.target;
-        const reg = /^([0]|[1-9][0-9]*)$/
+        const reg = /^([0]|[0-9][0-9]*)$/
         if (reg.test(inputValue) || inputValue === '') {
             setIcNumber3(inputValue)
         }
@@ -95,7 +98,7 @@ const Form1 = () => {
 
     const onPostcode = (e: any) => {
         const code = e.target.value
-        const reg = /^([0]|[1-9][0-9]*)$/
+        const reg = /^([0]|[0-9][0-9]*)$/
         if (reg.test(code) || code === '') {
             setPostcode(code)
         }
@@ -110,7 +113,7 @@ const Form1 = () => {
                 return
             }
         }
-        const reg = /^([0]|[1-9][0-9]*)$/
+        const reg = /^([0]|[0-9][0-9]*)$/
         if (reg.test(code) || code === '') {
             setPhoneF2(code)
         }
@@ -118,7 +121,7 @@ const Form1 = () => {
 
     const onSMSCode = (e: any) => {
         const code = e.target.value
-        const reg = /^([0]|[1-9][0-9]*)$/
+        const reg = /^([0]|[0-9][0-9]*)$/
         if (reg.test(code) || code === '') {
             setSMSCode(code)
         }
