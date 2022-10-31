@@ -232,7 +232,7 @@ const Form1 = () => {
             message.error(t('form1.tipErrNoPostcode'))
             return;
         } else {
-            if (postcode.length !== 6) {
+            if (postcode.length !== 5) {
                 message.error(t('form1.tipErrNoPostcode'))
                 return;
             } else {
@@ -500,14 +500,14 @@ const Form1 = () => {
                             </Col>
                             <Col xs={24} sm={19} md={20} lg={20} xl={21} xxl={22}>
                                 <Input style={{width: 100, borderWidth: 0, borderBottomWidth: 1}}
-                                       placeholder="xxxxxx"
+                                       placeholder="xxxxx"
                                        onChange={(e) => onPostcode(e)}
-                                       maxLength={6}
+                                       maxLength={5}
                                        onBlur={() => {
                                            if (!postcode) {
                                                setErrPostcode(true)
                                            } else {
-                                               if (postcode.length !== 6) {
+                                               if (postcode.length !== 5) {
                                                    setErrPostcode(true)
                                                } else {
                                                    setErrPostcode(false)
