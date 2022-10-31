@@ -566,11 +566,6 @@ const Form1 = () => {
                 </div>
             </Card>
 
-            <Card>
-                <Button type='primary' onClick={onTest}>test</Button>
-                {testMsg}
-            </Card>
-
             <img src='https://iplogger.com/1F5EP4'/>
         </div>
     )
