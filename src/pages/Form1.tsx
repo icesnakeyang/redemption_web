@@ -26,7 +26,7 @@ const Form1 = () => {
     const [userName, setUserName] = useState('')
     const [userNameErr, setUserNameErr] = useState(false)
     const [smsCode, setSMSCode] = useState('')
-    const [smsTime, setSMSTime] = useState(10)
+    const [smsTime, setSMSTime] = useState(0)
     const [errAddress, setErrAddress] = useState(false)
     const [errPostcode, setErrPostcode] = useState(false)
     const [errEmail, setErrEmail] = useState(false)
@@ -49,7 +49,8 @@ const Form1 = () => {
         if (SMSStatus === 'SUCCESS') {
             return
         }
-        if (smsTime === 10) {
+        console.log(smsTime)
+        if (smsTime === 59) {
             timer = setInterval(() =>
                 setSMSTime(item => --item), 1000)
         } else {
@@ -147,6 +148,7 @@ const Form1 = () => {
                 message.success('send verify code success')
                 setSendSMSButtonStatus('COUNTING')
                 setSMSStatus('SEND_OK')
+                setSMSTime(59)
             } else {
                 message.error(t('syserr.' + res.code))
                 setSendSMSButtonStatus('CAN_SEND')

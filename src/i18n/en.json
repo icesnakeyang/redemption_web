@@ -21,9 +21,12 @@
   },
   "syserr": {
     "10001": "System or network error",
+    "10005": "Send sms error",
     "10007": "Sorry, you have filled this form already!",
+    "10069": "The phone number error",
     "10071": "The sms code has expired",
     "10072": "Verify code error",
-    "10074": "No such verify information"
+    "10074": "No such verify information",
+    "10085": "The sms code have to be re send after 1 minutes, please wait a while"
   }
 }
