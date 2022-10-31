@@ -7,11 +7,13 @@ import ErrorMsg1 from "./ErrorMsg1";
 import QuestionBox from "./QuestionBox";
 import Banner1 from "./Banner1";
 import {useSelector} from "react-redux";
+import {useNavigate} from "react-router-dom";
 
 const {Option} = Select;
 let timer: any = null;
 
 const Form1 = () => {
+    const navigate = useNavigate()
     const {t} = useTranslation();
     const [icNumber1, setIcNumber1] = useState('')
     const [icNumber2, setIcNumber2] = useState('')
@@ -49,7 +51,6 @@ const Form1 = () => {
         if (SMSStatus === 'SUCCESS') {
             return
         }
-        console.log(smsTime)
         if (smsTime === 59) {
             timer = setInterval(() =>
                 setSMSTime(item => --item), 1000)
@@ -63,10 +64,8 @@ const Form1 = () => {
 
     const onIcN1 = (e: any) => {
         const {value: inputValue} = e.target;
-        console.log(inputValue)
         // const reg = /^([0]|[1-9][0-9]*)$/
         const reg = /^([0]|[0-9][0-9]*)$/
-        console.log(reg.test(inputValue))
         if (reg.test(inputValue) || inputValue === '') {
             setIcNumber1(inputValue)
         }
@@ -106,7 +105,6 @@ const Form1 = () => {
     }
 
     const onPhone2 = (e: any) => {
-        console.log(phoneF1)
         const code = e.target.value
         if (phoneF1 === '011') {
         } else {
@@ -175,6 +173,7 @@ const Form1 = () => {
             if (res.code === 0) {
                 message.success('verify success')
                 setSMSStatus('VERIFY_OK')
+                setPhoneErr(false)
             } else {
                 message.error(t('syserr.' + res.code))
                 setSMSStatus('VERIFY_FAIL')
@@ -196,9 +195,7 @@ const Form1 = () => {
     const onConfirm = () => {
         if (!userName) {
             message.error(t('form1.tipErrNoUsername'))
-            console.log(userNameErr)
             setUserNameErr(true)
-            console.log(userNameErr)
             return
         } else {
             setUserNameErr(false)
@@ -265,24 +262,18 @@ const Form1 = () => {
             postcode,
             email,
         }
-        console.log(params)
+        setSaving(true)
         apiSaveForm1(params).then((res: any) => {
             if (res.code === 0) {
                 message.success(t('form1.tipSaveSuccess'));
+                navigate("/thankpage")
             } else {
                 message.error(t('syserr.' + res.code))
+                setSaving(false)
             }
         }).catch(() => {
             message.error(t('syserr.10001'))
-        })
-    }
-
-    const onTest = () => {
-        apiTest1().then((res: any) => {
-            console.log(res)
-            if (res.code === 0) {
-                setTestMsg("test ok")
-            }
+            setSaving(false)
         })
     }
 
@@ -386,7 +377,6 @@ const Form1 = () => {
                                 defaultValue="010"
                                 style={{width: 90, background: '#fafafa'}}
                                 onChange={(e) => {
-                                    console.log(e)
                                     setPhoneF2('')
                                     setPhoneF1(e)
                                 }}>
