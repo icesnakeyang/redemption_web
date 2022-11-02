@@ -7,6 +7,7 @@ export const commonSlice = createSlice({
         },
         reducers: {
             doFresh: (state: any) => {
+                console.log('fresh ++')
                 state.freshCount += 1;
             },
             clearFresh: (state: any) => {

@@ -17,7 +17,8 @@
     "tipErrNoIcNumber": "Please input validate IC number",
     "tipErrNoAddress": "Please input your address",
     "tipErrNoPostcode": "Please input validate post code",
-    "tipErrNoEmail": "Please input email"
+    "tipErrNoEmail": "Please input email",
+    "tipErrNoSurvey": "Please answer the survey question first"
   },
   "syserr": {
     "10001": "System or network error",

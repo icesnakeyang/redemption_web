@@ -2,7 +2,7 @@ import {Card, Form, Input, Radio, Select} from "antd";
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {apiListSurveyLib} from "../api/Api";
-import {saveSurveysEdit, saveSurveysLib} from "../store/surveySlice";
+import {clearSurvey, saveSurveysEdit, saveSurveysLib} from "../store/surveySlice";
 import QuestionRow from "./QuestionRow";
 
 const QuestionBox = () => {
@@ -19,15 +19,31 @@ const QuestionBox = () => {
                 dispatch(saveSurveysLib(res.data.surveyList))
                 let arr: any = []
                 res.data.surveyList.map((item: any) => {
-                    let r = {
-                        questionId: item.questionId,
-                        answer: true
+                    console.log(item)
+                    if (item.answerType === 'TEXT') {
+                        let r = {
+                            questionId: item.questionId,
+                            answer: '',
+                            answerType: item.answerType
+                        }
+                        arr.push(r)
+                    } else {
+                        let r = {
+                            questionId: item.questionId,
+                            answer: true,
+                            answerType: item.answerType
+                        }
+                        arr.push(r)
                     }
-                    arr.push(r)
                 })
                 dispatch(saveSurveysEdit(arr))
+            } else {
+                dispatch(clearSurvey())
             }
+        }).catch(() => {
+            dispatch(clearSurvey())
         })
+
     }
 
     return (
