@@ -23,6 +23,7 @@ const Form1 = () => {
     const [phoneF1, setPhoneF1] = useState('010')
     const [phoneF2, setPhoneF2] = useState('')
     const [phoneErr, setPhoneErr] = useState(false)
+    const [phone, setPhone]=useState('')
     const [address, setAddress] = useState('')
     const [postcode, setPostcode] = useState('')
     const [email, setEmail] = useState('')
@@ -33,6 +34,7 @@ const Form1 = () => {
     const [errAddress, setErrAddress] = useState(false)
     const [errPostcode, setErrPostcode] = useState(false)
     const [errEmail, setErrEmail] = useState(false)
+    const [errPhone, setErrPhone] = useState(false)
     const [sendSMSButtonStatus, setSendSMSButtonStatus] = useState('CAN_SEND')
     const [SMSStatus, setSMSStatus] = useState('')
     // const [SMSStatus, setSMSStatus] = useState('VERIFY_OK')
@@ -230,11 +232,11 @@ const Form1 = () => {
                 return;
             }
         }
-        if (SMSStatus !== 'VERIFY_OK') {
-            setPhoneErr(true)
-            message.error(t('form1.tipErrPhoneVerify'))
-            return;
-        }
+        // if (SMSStatus !== 'VERIFY_OK') {
+        //     setPhoneErr(true)
+        //     message.error(t('form1.tipErrPhoneVerify'))
+        //     return;
+        // }
         if (!address) {
             setErrAddress(true)
             message.error(t('form1.tipErrNoAddress'))
@@ -266,12 +268,21 @@ const Form1 = () => {
             return
         }
 
+        if(!phone){
+            setErrPhone(true)
+            message.error("You must input your phone number")
+            return;
+        }else{
+            setErrPhone(false)
+        }
+
         let params = {
             surveys: surveysEdit,
             userName,
             icNumber1,
             icNumber2,
             icNumber3,
+            phone,
             phoneF1,
             phoneF2,
             address,
@@ -410,93 +421,116 @@ const Form1 = () => {
 
                             {/*phone*/}
                             <Form.Item>
-                                <div>
-                                    <Select
-                                        bordered={false}
-                                        defaultValue="010"
-                                        style={{width: 90, background: '#fafafa'}}
-                                        onChange={(e) => {
-                                            setPhoneF2('')
-                                            setPhoneF1(e)
-                                        }}>
-                                        <Option value="010">010</Option>
-                                        <Option value="011">011</Option>
-                                        <Option value="012">012</Option>
-                                        <Option value="013">013</Option>
-                                        <Option value="014">014</Option>
-                                        <Option value="015">015</Option>
-                                        <Option value="016">016</Option>
-                                        <Option value="017">017</Option>
-                                        <Option value="018">018</Option>
-                                        <Option value="019">019</Option>
-                                    </Select>
-                                    <Input style={{marginLeft: 5, width: 100, borderWidth: 0, borderBottomWidth: 1}}
-                                           onChange={(e) => onPhone2(e)}
-                                           placeholder="xxxxxxxx"
-                                           maxLength={8}
-                                           value={phoneF2}/>
+                                <Row>
+                                    <Col xs={24} sm={5} md={4} lg={4} xl={3} xxl={2}>
+                                        <div>{t('form1.phone')}</div>
+                                    </Col>
+                                    <Col xs={24} sm={19} md={20} lg={20} xl={21} xxl={22}>
+                                        <Input style={{borderWidth: 0, borderBottomWidth: 1}}
+                                                        onChange={e => setPhone(e.target.value)}
+                                                        onBlur={() => {
+                                                            console.log(1)
+                                                            console.log(phone)
+                                                            if (!phone || phone==='') {
+                                                                console.log('true')
+                                                                setPhoneErr(true)
+                                                            } else {
+                                                                console.log('false')
+                                                                setPhoneErr(false)
+                                                            }
+                                                        }}
+                                        />
+                                    </Col>
+                                </Row>
+                                {phoneErr ?
+                                    <ErrorMsg1 errMessage={t('form1.tipErrNoPhone')}/> : null}
+                                {/*<div>*/}
+                                {/*    <Select*/}
+                                {/*        bordered={false}*/}
+                                {/*        defaultValue="010"*/}
+                                {/*        style={{width: 90, background: '#fafafa'}}*/}
+                                {/*        onChange={(e) => {*/}
+                                {/*            setPhoneF2('')*/}
+                                {/*            setPhoneF1(e)*/}
+                                {/*        }}>*/}
+                                {/*        <Option value="010">010</Option>*/}
+                                {/*        <Option value="011">011</Option>*/}
+                                {/*        <Option value="012">012</Option>*/}
+                                {/*        <Option value="013">013</Option>*/}
+                                {/*        <Option value="014">014</Option>*/}
+                                {/*        <Option value="015">015</Option>*/}
+                                {/*        <Option value="016">016</Option>*/}
+                                {/*        <Option value="017">017</Option>*/}
+                                {/*        <Option value="018">018</Option>*/}
+                                {/*        <Option value="019">019</Option>*/}
+                                {/*    </Select>*/}
+                                {/*    <Input style={{marginLeft: 5, width: 100, borderWidth: 0, borderBottomWidth: 1}}*/}
+                                {/*           onChange={(e) => onPhone2(e)}*/}
+                                {/*           placeholder="xxxxxxxx"*/}
+                                {/*           maxLength={8}*/}
+                                {/*           value={phoneF2}/>*/}
 
-                                    {SMSStatus === 'VERIFY_OK' ?
-                                        <CheckCircleFilled
-                                            style={{color: 'green', fontSize: '20px', marginLeft: 10}}/> :
-                                        sendSMSButtonStatus === 'CAN_SEND' ?
-                                            <Button type="primary" style={{background: "#0553d3"}}
-                                                    onClick={() => {
-                                                        onSendSms()
-                                                    }}>Send code</Button> :
-                                            sendSMSButtonStatus === 'SENDING' ?
-                                                <Button disabled>Sending...</Button> :
-                                                sendSMSButtonStatus === 'COUNTING' ?
-                                                    <Button disabled>{smsTime}...</Button> :
-                                                    null
-                                    }
-                                </div>
-                                <div>
-                                    {
-                                        SMSStatus === 'SEND_OK' ?
-                                            <div style={{display: 'flex', marginTop: 10}}>
-                                                <Input
-                                                    style={{width: 140}}
-                                                    placeholder="Input verify code"
-                                                    maxLength={6}
-                                                    value={smsCode}
-                                                    onChange={(e) => onSMSCode(e)}/>
-                                                <Button type="primary"
-                                                        style={{background: "#0553d3"}} onClick={() => {
-                                                    onVerifySMSCode()
-                                                }
-                                                }>Verify</Button>
-                                            </div>
-                                            :
-                                            SMSStatus === 'VERIFYING' ?
-                                                <div style={{
-                                                    display: 'flex',
-                                                    marginTop: 10
-                                                }}>
-                                                    <Input style={{width: 140}} placeholder="Verify code"/>
-                                                    <Button type="default" loading>Verifying</Button>
-                                                </div>
-                                                :
-                                                SMSStatus === 'VERIFY_FAIL' ?
-                                                    <div style={{}}>
-                                                        <div style={{display: 'flex', marginTop: 10}}>
-                                                            <Input
-                                                                style={{width: 140}}
-                                                                placeholder="Verify code"
-                                                                maxLength={6}
-                                                                value={smsCode}
-                                                                onChange={(e) => onSMSCode(e)}/>
-                                                            <Button type="primary"
-                                                                    style={{background: "#0553d3"}}
-                                                                    onClick={onVerifySMSCode}>Verify</Button>
-                                                        </div>
-                                                        <ErrorMsg1 errMessage="Verify code error"/>
-                                                    </div>
-                                                    :
-                                                    null
-                                    }
-                                </div>
-                                {phoneErr ? <ErrorMsg1 errMessage={t('form1.tipErrPhoneVerify')}/> : null}
+                                {/*    {SMSStatus === 'VERIFY_OK' ?*/}
+                                {/*        <CheckCircleFilled*/}
+                                {/*            style={{color: 'green', fontSize: '20px', marginLeft: 10}}/> :*/}
+                                {/*        sendSMSButtonStatus === 'CAN_SEND' ?*/}
+                                {/*            <Button type="primary" style={{background: "#0553d3"}}*/}
+                                {/*                    onClick={() => {*/}
+                                {/*                        onSendSms()*/}
+                                {/*                    }}>Send code</Button> :*/}
+                                {/*            sendSMSButtonStatus === 'SENDING' ?*/}
+                                {/*                <Button disabled>Sending...</Button> :*/}
+                                {/*                sendSMSButtonStatus === 'COUNTING' ?*/}
+                                {/*                    <Button disabled>{smsTime}...</Button> :*/}
+                                {/*                    null*/}
+                                {/*    }*/}
+                                {/*</div>*/}
+                                {/*<div>*/}
+                                {/*    {*/}
+                                {/*        SMSStatus === 'SEND_OK' ?*/}
+                                {/*            <div style={{display: 'flex', marginTop: 10}}>*/}
+                                {/*                <Input*/}
+                                {/*                    style={{width: 140}}*/}
+                                {/*                    placeholder="Input verify code"*/}
+                                {/*                    maxLength={6}*/}
+                                {/*                    value={smsCode}*/}
+                                {/*                    onChange={(e) => onSMSCode(e)}/>*/}
+                                {/*                <Button type="primary"*/}
+                                {/*                        style={{background: "#0553d3"}} onClick={() => {*/}
+                                {/*                    onVerifySMSCode()*/}
+                                {/*                }*/}
+                                {/*                }>Verify</Button>*/}
+                                {/*            </div>*/}
+                                {/*            :*/}
+                                {/*            SMSStatus === 'VERIFYING' ?*/}
+                                {/*                <div style={{*/}
+                                {/*                    display: 'flex',*/}
+                                {/*                    marginTop: 10*/}
+                                {/*                }}>*/}
+                                {/*                    <Input style={{width: 140}} placeholder="Verify code"/>*/}
+                                {/*                    <Button type="default" loading>Verifying</Button>*/}
+                                {/*                </div>*/}
+                                {/*                :*/}
+                                {/*                SMSStatus === 'VERIFY_FAIL' ?*/}
+                                {/*                    <div style={{}}>*/}
+                                {/*                        <div style={{display: 'flex', marginTop: 10}}>*/}
+                                {/*                            <Input*/}
+                                {/*                                style={{width: 140}}*/}
+                                {/*                                placeholder="Verify code"*/}
+                                {/*                                maxLength={6}*/}
+                                {/*                                value={smsCode}*/}
+                                {/*                                onChange={(e) => onSMSCode(e)}/>*/}
+                                {/*                            <Button type="primary"*/}
+                                {/*                                    style={{background: "#0553d3"}}*/}
+                                {/*                                    onClick={onVerifySMSCode}>Verify</Button>*/}
+                                {/*                        </div>*/}
+                                {/*                        <ErrorMsg1 errMessage="Verify code error"/>*/}
+                                {/*                    </div>*/}
+                                {/*                    :*/}
+                                {/*                    null*/}
+                                {/*    }*/}
+                                {/*</div>*/}
+                                {/*{phoneErr ? <ErrorMsg1 errMessage={t('form1.tipErrPhoneVerify')}/> : null}*/}
                             </Form.Item>
 
                             {/*address*/}

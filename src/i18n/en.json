@@ -18,7 +18,8 @@
     "tipErrNoAddress": "Please input your address",
     "tipErrNoPostcode": "Please input validate post code",
     "tipErrNoEmail": "Please input email",
-    "tipErrNoSurvey": "Please answer the survey question first"
+    "tipErrNoSurvey": "Please answer the survey question first",
+    "tipErrNoPhone": "Please input your phone number"
   },
   "syserr": {
     "10001": "System or network error",
