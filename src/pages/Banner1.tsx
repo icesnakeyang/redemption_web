@@ -10,9 +10,10 @@ const Banner1 = () => {
                     <img src='2.png' width="100%"/>
                 </div>
                 <div style={{width:600, fontSize:12}}>
-                    We appreciate your continuous support and would like to improve our service for you.
-                    As this survey will take about 1-3 minutes, we would be rewarding you with RM8 eWallet credit once
-                    you have completed the survey. This is on a first come, first served basis only.
+                    We appreciate your continuous support and would like to improve our service for you. <br/>
+                    As this survey will take about 1-3 minutes, <br/>
+                    we would be rewarding you with <b>$8 eWallet credit</b> once you have completed the survey. <br/>
+                    This is on a first come, first served basis only.<br/>
                 </div>
             </div>
         </div>

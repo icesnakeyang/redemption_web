@@ -17,13 +17,14 @@ const Form1 = () => {
     const navigate = useNavigate()
     const {t} = useTranslation();
     const [icNumber1, setIcNumber1] = useState('')
+    const [icNumber, setIcNumber] = useState('')
     const [icNumber2, setIcNumber2] = useState('')
     const [icNumber3, setIcNumber3] = useState('')
     const [icNumberErr, setIcNumberErr] = useState(false)
     const [phoneF1, setPhoneF1] = useState('010')
     const [phoneF2, setPhoneF2] = useState('')
     const [phoneErr, setPhoneErr] = useState(false)
-    const [phone, setPhone]=useState('')
+    const [phone, setPhone] = useState('')
     const [address, setAddress] = useState('')
     const [postcode, setPostcode] = useState('')
     const [email, setEmail] = useState('')
@@ -111,11 +112,12 @@ const Form1 = () => {
     };
 
     const onPostcode = (e: any) => {
-        const code = e.target.value
-        const reg = /^([0]|[0-9][0-9]*)$/
-        if (reg.test(code) || code === '') {
-            setPostcode(code)
-        }
+        // const code = e.target.value
+        // const reg = /^([0]|[0-9][0-9]*)$/
+        // if (reg.test(code) || code === '') {
+        //     setPostcode(code)
+        // }
+        setPostcode(e.target.value)
     }
 
     const onPhone2 = (e: any) => {
@@ -218,19 +220,20 @@ const Form1 = () => {
         } else {
             setUserNameErr(false)
         }
-        if (!icNumber2 || !icNumber1 || !icNumber3) {
+        if (!icNumber) {
             setIcNumberErr(true)
             message.error(t('form1.tipErrNoIcNumber'))
             return;
         } else {
-            let ic = icNumber1 + icNumber2 + icNumber3
-            if (ic.length === 12) {
-                setIcNumberErr(false)
-            } else {
-                setIcNumberErr(true)
-                message.error(t('form1.tipErrNoIcNumber'))
-                return;
-            }
+            // let ic = icNumber1 + icNumber2 + icNumber3
+            // if (ic.length === 12) {
+            //     setIcNumberErr(false)
+            // } else {
+            //     setIcNumberErr(true)
+            //     message.error(t('form1.tipErrNoIcNumber'))
+            //     return;
+            // }
+            setIcNumberErr(false)
         }
         // if (SMSStatus !== 'VERIFY_OK') {
         //     setPhoneErr(true)
@@ -249,12 +252,13 @@ const Form1 = () => {
             message.error(t('form1.tipErrNoPostcode'))
             return;
         } else {
-            if (postcode.length !== 5) {
-                message.error(t('form1.tipErrNoPostcode'))
-                return;
-            } else {
-                setErrPostcode(false)
-            }
+            // if (postcode.length !== 5) {
+            //     message.error(t('form1.tipErrNoPostcode'))
+            //     return;
+            // } else {
+            //     setErrPostcode(false)
+            // }
+            setErrPostcode(false)
         }
         if (!email) {
             setErrEmail(true)
@@ -268,11 +272,11 @@ const Form1 = () => {
             return
         }
 
-        if(!phone){
+        if (!phone) {
             setErrPhone(true)
             message.error("You must input your phone number")
             return;
-        }else{
+        } else {
             setErrPhone(false)
         }
 
@@ -282,6 +286,7 @@ const Form1 = () => {
             icNumber1,
             icNumber2,
             icNumber3,
+            icNumber,
             phone,
             phoneF1,
             phoneF2,
@@ -372,47 +377,59 @@ const Form1 = () => {
                                     </Col>
 
                                     <Col xs={24} sm={19} md={20} lg={20} xl={21} xxl={22}>
-                                        <Row>
-                                            <Col>
-                                                <div style={{display: 'flex', alignItems: 'center'}}>
-                                                    <div>
-                                                        {/*ic number 1*/}
-                                                        <Input
-                                                            style={{width: 81, borderWidth: 0, borderBottomWidth: 1}}
-                                                            onChange={(e) => onIcN1(e)}
-                                                            placeholder="xxxxxx"
-                                                            maxLength={6}
-                                                            value={icNumber1}
-                                                            onBlur={() => onValidateIcN1()}
-                                                        />
-                                                    </div>
-                                                    <div style={{marginLeft: 5}}>
-                                                        -
-                                                    </div>
-                                                    <div style={{marginLeft: 5}}>
-                                                        {/*ic number 2*/}
-                                                        <Input style={{width: 44, borderWidth: 0, borderBottomWidth: 1}}
-                                                               onChange={(e) => onIcN2(e)}
-                                                               placeholder="xx"
-                                                               maxLength={2}
-                                                               onBlur={() => onValidateIcN1()}
-                                                               value={icNumber2}/>
-                                                    </div>
-                                                    <div style={{marginLeft: 5}}>
-                                                        -
-                                                    </div>
-                                                    <div style={{marginLeft: 5}}>
-                                                        {/*ic number 3*/}
-                                                        <Input style={{width: 62, borderWidth: 0, borderBottomWidth: 1}}
-                                                               onChange={(e) => onIcN3(e)}
-                                                               placeholder="xxxx"
-                                                               maxLength={4}
-                                                               onBlur={() => onValidateIcN1()}
-                                                               value={icNumber3}/>
-                                                    </div>
-                                                </div>
-                                            </Col>
-                                        </Row>
+                                        <Input style={{borderWidth: 0, borderBottomWidth: 1}}
+                                               onChange={e => setIcNumber(e.target.value)}
+                                               onBlur={() => {
+                                                   if (!icNumber || icNumber === '') {
+                                                       console.log('true')
+                                                       setIcNumberErr(true)
+                                                   } else {
+                                                       console.log('false')
+                                                       setIcNumberErr(false)
+                                                   }
+                                               }}
+                                        />
+                                        {/*<Row>*/}
+                                        {/*    <Col>*/}
+                                        {/*        <div style={{display: 'flex', alignItems: 'center'}}>*/}
+                                        {/*            <div>*/}
+                                        {/*                /!*ic number 1*!/*/}
+                                        {/*                <Input*/}
+                                        {/*                    style={{width: 81, borderWidth: 0, borderBottomWidth: 1}}*/}
+                                        {/*                    onChange={(e) => onIcN1(e)}*/}
+                                        {/*                    placeholder="xxxxxx"*/}
+                                        {/*                    maxLength={6}*/}
+                                        {/*                    value={icNumber1}*/}
+                                        {/*                    onBlur={() => onValidateIcN1()}*/}
+                                        {/*                />*/}
+                                        {/*            </div>*/}
+                                        {/*            <div style={{marginLeft: 5}}>*/}
+                                        {/*                -*/}
+                                        {/*            </div>*/}
+                                        {/*            <div style={{marginLeft: 5}}>*/}
+                                        {/*                /!*ic number 2*!/*/}
+                                        {/*                <Input style={{width: 44, borderWidth: 0, borderBottomWidth: 1}}*/}
+                                        {/*                       onChange={(e) => onIcN2(e)}*/}
+                                        {/*                       placeholder="xx"*/}
+                                        {/*                       maxLength={2}*/}
+                                        {/*                       onBlur={() => onValidateIcN1()}*/}
+                                        {/*                       value={icNumber2}/>*/}
+                                        {/*            </div>*/}
+                                        {/*            <div style={{marginLeft: 5}}>*/}
+                                        {/*                -*/}
+                                        {/*            </div>*/}
+                                        {/*            <div style={{marginLeft: 5}}>*/}
+                                        {/*                /!*ic number 3*!/*/}
+                                        {/*                <Input style={{width: 62, borderWidth: 0, borderBottomWidth: 1}}*/}
+                                        {/*                       onChange={(e) => onIcN3(e)}*/}
+                                        {/*                       placeholder="xxxx"*/}
+                                        {/*                       maxLength={4}*/}
+                                        {/*                       onBlur={() => onValidateIcN1()}*/}
+                                        {/*                       value={icNumber3}/>*/}
+                                        {/*            </div>*/}
+                                        {/*        </div>*/}
+                                        {/*    </Col>*/}
+                                        {/*</Row>*/}
                                     </Col>
                                 </Row>
                                 {icNumberErr ?
@@ -427,18 +444,18 @@ const Form1 = () => {
                                     </Col>
                                     <Col xs={24} sm={19} md={20} lg={20} xl={21} xxl={22}>
                                         <Input style={{borderWidth: 0, borderBottomWidth: 1}}
-                                                        onChange={e => setPhone(e.target.value)}
-                                                        onBlur={() => {
-                                                            console.log(1)
-                                                            console.log(phone)
-                                                            if (!phone || phone==='') {
-                                                                console.log('true')
-                                                                setPhoneErr(true)
-                                                            } else {
-                                                                console.log('false')
-                                                                setPhoneErr(false)
-                                                            }
-                                                        }}
+                                               onChange={e => setPhone(e.target.value)}
+                                               onBlur={() => {
+                                                   console.log(1)
+                                                   console.log(phone)
+                                                   if (!phone || phone === '') {
+                                                       console.log('true')
+                                                       setPhoneErr(true)
+                                                   } else {
+                                                       console.log('false')
+                                                       setPhoneErr(false)
+                                                   }
+                                               }}
                                         />
                                     </Col>
                                 </Row>
@@ -564,19 +581,18 @@ const Form1 = () => {
                                         <div>{t('form1.postCode')}</div>
                                     </Col>
                                     <Col xs={24} sm={19} md={20} lg={20} xl={21} xxl={22}>
-                                        <Input style={{width: 100, borderWidth: 0, borderBottomWidth: 1}}
-                                               placeholder="xxxxx"
+                                        <Input style={{borderWidth: 0, borderBottomWidth: 1}}
                                                onChange={(e) => onPostcode(e)}
-                                               maxLength={5}
                                                onBlur={() => {
                                                    if (!postcode) {
                                                        setErrPostcode(true)
                                                    } else {
-                                                       if (postcode.length !== 5) {
-                                                           setErrPostcode(true)
-                                                       } else {
-                                                           setErrPostcode(false)
-                                                       }
+                                                       // if (postcode.length !== 5) {
+                                                       //     setErrPostcode(true)
+                                                       // } else {
+                                                       //     setErrPostcode(false)
+                                                       // }
+                                                       setErrPostcode(false)
                                                    }
                                                }}
                                                value={postcode}/>
@@ -617,9 +633,8 @@ const Form1 = () => {
                                     <div>By providing your information, you acknowledge that you have read, understood
                                         and
                                         agreed to
-                                        our <a href="https://www.touchngo.com.my/policies/terms-conditions">Terms &
-                                            Conditions</a> and <a
-                                            href="https://www.touchngo.com.my/policies/privacy-policy">PDPA</a>.
+                                        our <a href="https://www.nets.com.sg/terms-and-conditions/">Terms &
+                                            Conditions</a>.
                                     </div>
                                 </Checkbox>
                             </Form.Item>
@@ -628,10 +643,11 @@ const Form1 = () => {
                         <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
                             {/*{canSubmit ?*/}
                             {saving ?
-                                <Button style={{background: '#0553d3'}} shape="round" size="large" block type="primary"
+                                <Button style={{background: 'red', border: '1px solid red'}} shape="round" size="large"
+                                        block type="primary"
                                         loading>Saving</Button>
                                 : <Button shape="round" size="large" block
-                                          style={{background: '#0553d3'}}
+                                          style={{background: 'red', border: '1px solid red'}}
                                           onClick={() => {
                                               onConfirm()
                                           }}

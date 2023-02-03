@@ -4,8 +4,8 @@
     "tip1": "Survey Form"
   },
   "form1": {
-    "name": "Name (As per IC)",
-    "icNumber": "IC Number",
+    "name": "Name (As per NRIC/Passport)",
+    "icNumber": "National Identity Number / Passport Number",
     "phone": "Phone Number",
     "address": "Address",
     "postCode": "Postcode",
